@@ -1,5 +1,6 @@
-import {Router} from "express";
+import {Router, Request, Response} from "express";
 import {CreateEvent, DeleteEvent, GetSingleEvent, ListEvents, UpdateEvent} from "../controllers/Event";
+import { AuthAdminMiddleware } from "../middleware";
 const router = Router();
 
 function verifyEventBody(body: any){
@@ -14,7 +15,7 @@ function verifyEventBody(body: any){
     if(!body.venue || body.venue === "") throw new Error("venue parameter is required");
 }
 
-router.post('/', async (req, res) => {
+router.post('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const body = req.body;
     verifyEventBody(body);
 
@@ -25,7 +26,7 @@ router.post('/', async (req, res) => {
     res.json(result);
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const id = req.params.id;
     if(!id || id === "") throw new Error("id parameter is required");
 
@@ -33,7 +34,7 @@ router.get('/:id', async (req, res) => {
     res.json(result);
 });
 
-router.get('/', async (req, res) => {
+router.get('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const page = req.query.page ? Number(req.query.page) : 1;
     const limit = req.query.limit ? Number(req.query.limit) : 20;
     const search = req.query.search ? String(req.query.search) : null;
@@ -42,7 +43,7 @@ router.get('/', async (req, res) => {
     res.json(result);
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const id = req.params.id;
     if(!id || id === "") throw new Error("id parameter is required");
 
@@ -55,7 +56,7 @@ router.patch('/:id', async (req, res) => {
     res.json(result);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const id = req.params.id;
     if(!id || id === "") throw new Error("id parameter is required");
 

@@ -15,6 +15,9 @@ class Config implements Iconfig{
         USER_COLLECTION: "users",
         EVENT_TYPES_COLLECTION: "event_types"
     };
+
+    jwt_secret = process.env.JWT_SECRET || 'secret';
+    jwt_expires = process.env.JWTEXPIRES || '7d';
 }
 
 export const config = new Config();

@@ -1,5 +1,6 @@
-import {Router} from "express";
+import {Router, Request, Response} from "express";
 import { CreateEventType, DeleteEventType, ListEventTypes, UpdateEventType } from "../controllers/EventType";
+import { AuthAdminMiddleware } from "../middleware";
 const router = Router();
 
 function validateEventTypeBody(body: any){
@@ -7,7 +8,7 @@ function validateEventTypeBody(body: any){
     if(!body.description || body.description === "") throw new Error("description parameter is required");
 }
 
-router.post('/', async (req, res) => {
+router.post('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const body = req.body;
     validateEventTypeBody(body);
 
@@ -15,12 +16,12 @@ router.post('/', async (req, res) => {
     res.json(result);
 });
 
-router.get('/', async (req, res) => {
+router.get('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const result = await ListEventTypes();
     res.json(result);
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const id = req.params.id;
     if(!id || id === "") throw new Error("id parameter is required");
     const body = req.body;
@@ -30,7 +31,7 @@ router.patch('/:id', async (req, res) => {
     res.json(result);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
     const id = req.params.id;
     if(!id || id === "") throw new Error("id parameter is required");
 

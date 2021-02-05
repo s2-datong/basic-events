@@ -16,4 +16,6 @@ export interface Iconfig {
     mongodb: MongoConfig;
     port: number;
     collections: ICollections;
+    jwt_secret: string;
+    jwt_expires: string;
 }

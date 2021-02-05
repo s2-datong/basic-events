@@ -77,4 +77,12 @@ export class Event{
         const collection = await getCollection(config.collections.EVENT_COLLECTION);
         await collection.deleteOne({_id: new ObjectId(id)});
     }
+
+    static async find(id: string): Promise<Event> {
+        const collection = await getCollection(config.collections.EVENT_COLLECTION);
+        const event = await collection.findOne({_id: new ObjectId(id)});
+
+        if(!event) throw new Error("event not found");
+        return new Event(event.name, event.description, event.event_types, event.date, event.venue, id);
+    }
 }

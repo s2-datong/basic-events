@@ -63,4 +63,12 @@ export class User{
 
         return new User(user.first_name, user.last_name, user.email, password, user.roles, String(user._id));
     }
+
+    static async EmailExists(email: string): Promise<boolean>{
+        const collection = await getCollection(config.collections.USER_COLLECTION);
+        const user = await collection.findOne({email: email.toLowerCase()});
+
+        if(!user) return false;
+        return true;
+    }
 }
