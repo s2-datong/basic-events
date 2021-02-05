@@ -1,10 +1,10 @@
 import {getCollection} from "../db";
 import {config} from "../config";
 
-export const Register = () => {
+export const Register = (firstname: string, lastname: string, email: string, password: string) => {
     //
 }
 
-export const Login = () => {
+export const Login = ( email: string, password: string ) => {
     //
 }
