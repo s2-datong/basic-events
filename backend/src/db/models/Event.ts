@@ -41,13 +41,13 @@ export class Event{
     async update(){
         const collection = await getCollection(config.collections.EVENT_COLLECTION);
         if(this.id){
-            await collection.updateOne({_id: this.id}, {
+            await collection.updateOne({_id: this.id}, {$set: {
                 name: this.name,
                 description: this.description,
                 event_types: this.event_types,
                 date: this.date,
                 venue: this.venue
-            });
+            }});
         }
         else throw new Error("Cannot update event without id");
     }
@@ -61,8 +61,8 @@ export class Event{
             {description: {$regex: search, $otions: 'i'}}
         ]};
         const result = await collection.find(where).sort({_id: -1}).skip(skip).limit(limit).toArray();
-        const events = result.map((event: Event) => ({
-            id: String(event.id),
+        const events = result.map((event) => ({
+            id: String(event._id),
             name: event.name,
             description: event.description,
             date: event.date,

@@ -6,7 +6,7 @@ let db : Db | null = null;
 
 export const setupDB = async () => {
     try{
-        const mongourl = `mongodb://${config.mongodb.user}:${config.mongodb.password}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.database}`;
+        const mongourl = `mongodb+srv://${config.mongodb.user}:${config.mongodb.password}@${config.mongodb.host}/${config.mongodb.database}?retryWrites=true&w=majority`;
         client = new MongoClient(mongourl, {useNewUrlParser: true, useUnifiedTopology: true});
         await client.connect();
         db = client.db(config.mongodb.database);

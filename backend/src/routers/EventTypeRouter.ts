@@ -9,34 +9,50 @@ function validateEventTypeBody(body: any){
 }
 
 router.post('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const body = req.body;
-    validateEventTypeBody(body);
+    try{
+        const body = req.body;
+        validateEventTypeBody(body);
 
-    const result = await CreateEventType(body.name, body.description);
-    res.json(result);
+        const result = await CreateEventType(body.name, body.description);
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
-router.get('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const result = await ListEventTypes();
-    res.json(result);
+router.get('/', async (req: Request, res: Response) => {
+    try{
+        const result = await ListEventTypes();
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
 router.patch('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const id = req.params.id;
-    if(!id || id === "") throw new Error("id parameter is required");
-    const body = req.body;
-    validateEventTypeBody(body);
+    try{
+        const id = req.params.id;
+        if(!id || id === "") throw new Error("id parameter is required");
+        const body = req.body;
+        validateEventTypeBody(body);
 
-    const result = await UpdateEventType(id, body.name, body.description);
-    res.json(result);
+        const result = await UpdateEventType(id, body.name, body.description);
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
 router.delete('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const id = req.params.id;
-    if(!id || id === "") throw new Error("id parameter is required");
+    try{
+        const id = req.params.id;
+        if(!id || id === "") throw new Error("id parameter is required");
 
-    const result = await DeleteEventType(id);
-    res.json(result);
+        const result = await DeleteEventType(id);
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
 export const EventTypeRouter = router;

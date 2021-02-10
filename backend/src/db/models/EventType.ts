@@ -25,10 +25,10 @@ export class EventType{
     async update(){
         if(this.id){
             const collection = await getCollection(config.collections.EVENT_TYPES_COLLECTION);
-            await collection.updateOne({id: this.id}, {
+            await collection.updateOne({id: this.id}, {$set: {
                 name: this.name,
                 description: this.description
-            })
+            }})
         }
         else throw new Error("Cannot update event type without id");
     }
@@ -36,8 +36,8 @@ export class EventType{
     static async list(){
         const collection = await getCollection(config.collections.EVENT_TYPES_COLLECTION);
         const result = await collection.find().sort({_id: -1}).toArray();
-        const event_types = result.map( (event_type: EventType) => ({
-            id: String(event_type.id),
+        const event_types = result.map( (event_type) => ({
+            id: String(event_type._id),
             name: event_type.name,
             description: event_type.description
         }))

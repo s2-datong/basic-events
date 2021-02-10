@@ -16,52 +16,72 @@ function verifyEventBody(body: any){
 }
 
 router.post('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const body = req.body;
-    verifyEventBody(body);
+    try{
+        const body = req.body;
+        verifyEventBody(body);
 
-    const result = await CreateEvent(
-        body.name, body.description, body.event_types, new Date(body.date), body.venue
-    );
+        const result = await CreateEvent(
+            body.name, body.description, body.event_types, new Date(body.date), body.venue
+        );
 
-    res.json(result);
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
-router.get('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const id = req.params.id;
-    if(!id || id === "") throw new Error("id parameter is required");
+router.get('/:id', async (req: Request, res: Response) => {
+    try{
+        const id = req.params.id;
+        if(!id || id === "") throw new Error("id parameter is required");
 
-    const result = await GetSingleEvent(id);
-    res.json(result);
+        const result = await GetSingleEvent(id);
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
-router.get('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const page = req.query.page ? Number(req.query.page) : 1;
-    const limit = req.query.limit ? Number(req.query.limit) : 20;
-    const search = req.query.search ? String(req.query.search) : null;
+router.get('/', async (req: Request, res: Response) => {
+    try{
+        const page = req.query.page ? Number(req.query.page) : 1;
+        const limit = req.query.limit ? Number(req.query.limit) : 20;
+        const search = req.query.search ? String(req.query.search) : null;
 
-    const result = await ListEvents(page, limit, search);
-    res.json(result);
+        const result = await ListEvents(page, limit, search);
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
 router.patch('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const id = req.params.id;
-    if(!id || id === "") throw new Error("id parameter is required");
+    try{
+        const id = req.params.id;
+        if(!id || id === "") throw new Error("id parameter is required");
 
-    const body = req.body;
-    verifyEventBody(body);
+        const body = req.body;
+        verifyEventBody(body);
 
-    const result = await UpdateEvent(
-        id, body.name, body.description, body.event_types, new Date(body.date), body.venue
-    );
-    res.json(result);
+        const result = await UpdateEvent(
+            id, body.name, body.description, body.event_types, new Date(body.date), body.venue
+        );
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
 router.delete('/:id', AuthAdminMiddleware, async (req: Request, res: Response) => {
-    const id = req.params.id;
-    if(!id || id === "") throw new Error("id parameter is required");
+    try{
+        const id = req.params.id;
+        if(!id || id === "") throw new Error("id parameter is required");
 
-    const result = await DeleteEvent(id);
-    res.json(result);
+        const result = await DeleteEvent(id);
+        res.json(result);
+    }catch(e){
+        res.status(400).json({message: e.message});
+    }
 });
 
 export const EventRouter = router;
