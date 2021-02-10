@@ -1,5 +1,7 @@
 class Navigation{
-    phistory = [];
+    static phistory = [];
+    static side_drawer_open = false;
+    static side_drawer_id = null;
 
     static GoToPage(id){
         // slides from right to left
@@ -73,5 +75,62 @@ class Navigation{
             page.classList.add("active");
             page.classList.remove("left");
         }
+    }
+
+    static ShowSideDrawer(id){
+        if(Navigation.side_drawer_open === true && id === Navigation.side_drawer_id) return;
+        if(Navigation.side_drawer_open === false){
+            const sideDrawer = document.querySelector("#" + id);
+            sideDrawer.classList.add("thirty");
+            Navigation.side_drawer_open = true;
+            Navigation.side_drawer_id = id;
+        }
+        if(Navigation.side_drawer_open === true && id !== Navigation.side_drawer_id){
+            const openSideDrawer = document.querySelector("#"+ Navigation.side_drawer_id);
+            const sideDrawer = document.querySelector("#" + id);
+
+            const transitionEnd = () => {
+                sideDrawer.classList.add("thirty");
+                Navigation.side_drawer_id = id;
+                openSideDrawer.removeEventListener('transitionend', transitionEnd);
+            };
+
+            openSideDrawer.addEventListener('transitionend', transitionEnd);
+            openSideDrawer.classList.remove("thirty");
+        }
+    }
+
+    static CloseSideDrawer(){
+        if(Navigation.side_drawer_open === true){
+            const sideDrawer = document.querySelector("#" + Navigation.side_drawer_id);
+            sideDrawer.classList.remove("thirty");
+            Navigation.side_drawer_open = false;
+            Navigation.side_drawer_id = null;
+        }
+    }
+
+    static SideDrawerLoading(){
+        if(Navigation.side_drawer_open === false) return;
+        const div = document.createElement("div");
+        div.classList.add('side-drawer-loading');
+        div.innerHTML = '<img src="img/loader2.gif" width="60px" />';
+        document.body.appendChild(div);
+    }
+
+    static SideDrawerDone(){
+        const div = document.querySelector('.side-drawer-loading');
+        if(div){
+            div.remove();
+        }
+    }
+
+    static Loading(){
+        const loader = document.querySelector('.loading');
+        loader.classList.remove('hide');
+    }
+
+    static Done(){
+        const loader = document.querySelector('.loading');
+        loader.classList.add('hide');
     }
 }

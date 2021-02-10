@@ -16,24 +16,261 @@
 
                 </div>
             </div>
-            <div class="page right transition" id="admin-login" style="background-color: aqua;">
+            <div class="page right transition" id="admin-login">
                 <form>
+                    <h3>Login</h3>
                     <label>Email</label>
                     <input type="email" placeholder="email" />
                     <label>Password</label>
                     <input type="password" placeholder="password" />
                     <button onclick="AdminLogin(event)">Login</button>
                 </form>
+                <style>
+                    #admin-login {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-image: url(img/laptop.jpg);
+                        background-size: cover;
+                    }
+
+                    #admin-login form{
+                        width: 50%;
+                        max-width: 500px;
+                        height: 50%;
+                        background-color: #4978bf;
+                        color: #fff;
+                        padding: 20px;
+                    }
+
+                    #admin-login form input,label {
+                        display: block;
+                        width: 100%;
+                    }
+
+                    #admin-login form input {
+                        margin-bottom: 10px;
+                        padding: 5px;
+                        outline: none;
+                    }
+                </style>
             </div>
             <div class="page right transition" id="admin-home">
-                //
+                <header class="main-header">
+                    <h3>Admin Home</h3>
+                    <ul>
+                        <li>
+                            <a href="javascript:void(0)" onclick="GetEvents(true)">Event</a>
+                            <a href="javascript:void(0)" onclick="GetEventTypes(true)">Event Type</a>
+                            <a href="javascript:void(0)" onclick="Logout()">Logout</a>
+                        </li>
+                    </ul>
+                </header>
+                <header class="sub-header">
+                    <button onclick="Navigation.ShowSideDrawer('new-event')">Create Event</button>
+                    <button onclick="Navigation.ShowSideDrawer('new-event-type')">Create Event Type</button>
+                </header>
+                <section>
+                    //
+                </section>
             </div>
-            <div class="side-drawer" style="background-color: blueviolet;"></div>
+            <div class="side-drawer" id="new-event">
+                <div>
+                    <h3>New Event</h3>
+                    <input type="text" name="event-name" placeholder="Event Name" />
+                    <textarea name="event-description" placeholder="Event Description"></textarea>
+                    <input name="event-date" type="text" placeholder="Date" />
+                    <input name="event-venue" type="text" placeholder="Venue" />
+                    <label>Select Event Type(s)</label>
+                    <select class="event-types-options" multiple></select>
+                    <button class="new-event">Create Event</button>
+                    <button onclick="Navigation.CloseSideDrawer()">Cancel</button>
+                </div>
+                <style>
+                    #new-event input,textarea,label,select {
+                        width: 100%;
+                        margin: 5px;
+                    }
+                    #new-event h3 {
+                        font-size: 1.21rem;
+                        text-align: center;
+                    }
+                </style>
+                <script>
+                    (function () {
+                        const page = document.querySelector('#new-event');
+                        const newEventBtn = page.querySelector('button.new-event');
+                        newEventBtn.addEventListener('click', () => {
+                            Navigation.SideDrawerLoading();
+                            const name = page.querySelector('input[name=event-name]').value;
+                            const description = page.querySelector('textarea[name=event-description]').value;
+                            const date = page.querySelector('input[name=event-date]').value;
+                            const venue = page.querySelector('input[name=event-venue]').value;
+                            const eventTypes = [];
+                            const options = page.querySelector('.event-types-options').options;
+                            for(let i = 0; i < options.length; i++) {
+                                const option = options[i];
+                                if(option.selected) eventTypes.push(option.value || option.text)
+                            };
+
+                            CreateEvent(name, description, eventTypes, date, venue)
+                            .then(result => {
+                                Navigation.SideDrawerDone();
+                                GetEvents(true);
+                                for(let i = 0; i < options.length; i++) {
+                                    const option = options[i];
+                                    option.selected = false;
+                                };
+                                Navigation.CloseSideDrawer();
+                                // TODO: toast event created
+                            })
+                            .catch(e => {
+                                Navigation.SideDrawerDone();
+                                // toast - error
+                            })
+                        });
+                    })();
+                </script>
+            </div>
+            <div class="side-drawer" id="new-event-type">
+                <h3>New Event Type</h3>
+                <input type="text" name="event-type-name" placeholder="Event Type Name" />
+                <textarea name="event-type-description" placeholder="Event Type Description"></textarea>
+                <button class="new-event-type">Create Event Type</button>
+                <button onclick="Navigation.CloseSideDrawer()">Cancel</button>
+                <style>
+                    #new-event-type input,textarea,label,select {
+                        width: 100%;
+                        margin: 5px;
+                    }
+                    #new-event-type h3 {
+                        font-size: 1.21rem;
+                        text-align: center;
+                    }
+                </style>
+                <script>
+                    (function () {
+                        const page = document.querySelector('#new-event-type');
+                        const newEventTypeBtn = page.querySelector('button.new-event-type');
+                        newEventTypeBtn.addEventListener('click', () => {
+                            Navigation.SideDrawerLoading();
+                            const name = page.querySelector('input[name=event-type-name]').value;
+                            const description = page.querySelector('textarea[name=event-type-description]').value;
+
+                            CreateEventType(name, description)
+                            .then(result => {
+                                Navigation.SideDrawerDone();
+                                GetEventTypes(true);
+                            })
+                            .catch(e => {
+                                Navigation.SideDrawerDone();
+                            })
+                        });
+                    })();
+                </script>
+            </div>
+            <div class="side-drawer" id="update-event">
+                <h3>Update Event</h3>
+                <input type="text" name="event-name" placeholder="Event Name" />
+                <textarea name="event-description" placeholder="Event Description"></textarea>
+                <input name="event-date" type="text" placeholder="Date" />
+                <input name="event-venue" type="text" placeholder="Venue" />
+                <label>Select Event Type(s)</label>
+                <select class="event-types-options" multiple></select>
+                <button class="update-event">Update Event</button>
+                <button onclick="Navigation.CloseSideDrawer()">Cancel</button>
+                <style>
+                    #update-event input,textarea,label,select {
+                        width: 100%;
+                        margin: 5px;
+                    }
+                    #update-event h3 {
+                        font-size: 1.21rem;
+                        text-align: center;
+                    }
+                </style>
+                <script>
+                    (function () {
+                        const page = document.querySelector('#update-event');
+                        const updateEventBtn = page.querySelector('button.update-event');
+                        updateEventBtn.addEventListener('click', () => {
+                            Navigation.SideDrawerLoading();
+                            const name = page.querySelector('input[name=event-name]').value;
+                            const description = page.querySelector('textarea[name=event-description]').value;
+                            const date = page.querySelector('input[name=event-date]').value;
+                            const venue = page.querySelector('input[name=event-venue]').value;
+                            const eventTypes = [];
+                            const options = page.querySelector('.event-types-options').options;
+                            for(let i = 0; i < options.length; i++) {
+                                const option = options[i];
+                                if(option.selected) eventTypes.push(option.value || option.text)
+                            };
+
+                            UpdateEvent(update_event_id, name, description, eventTypes, date, venue)
+                            .then(result => {
+                                Navigation.SideDrawerDone();
+                                GetEvents(true);
+                                for(let i = 0; i < options.length; i++) {
+                                    const option = options[i];
+                                    option.selected = false;
+                                };
+                                Navigation.CloseSideDrawer();
+                            })
+                            .catch(e => {
+                                Navigation.SideDrawerDone();
+                                // toast - error
+                            })
+                        });
+                    })();
+                </script>
+            </div>
+            <div class="side-drawer" id="update-event-type">
+                <h3>Update Event Type</h3>
+                <input type="text" name="event-type-name" placeholder="Event Type Name" />
+                <textarea name="event-type-description" placeholder="Event Type Description"></textarea>
+                <button class="update-event-type">Update Event Type</button>
+                <button onclick="Navigation.CloseSideDrawer()">Cancel</button>
+                <style>
+                    #update-event-type input,textarea,label,select {
+                        width: 100%;
+                        margin: 5px;
+                    }
+                    #update-event-type h3 {
+                        font-size: 1.21rem;
+                        text-align: center;
+                    }
+                </style>
+                <script>
+                    (function () {
+                        const page = document.querySelector('#update-event-type');
+                        const updateEventTypeBtn = page.querySelector('button.update-event-type');
+                        updateEventTypeBtn.addEventListener('click', () => {
+                            Navigation.SideDrawerLoading();
+                            const name = page.querySelector('input[name=event-type-name]').value;
+                            const description = page.querySelector('textarea[name=event-type-description]').value;
+
+                            UpdateEventType(update_event_type_id, name, description)
+                            .then(result => {
+                                Navigation.SideDrawerDone();
+                                GetEventTypes(true);
+                            })
+                            .catch(e => {
+                                Navigation.SideDrawerDone();
+                            })
+                        });
+                    })();
+                </script>
+            </div>
+            <div class="loading modal-container hide">
+                <img src="img/loader2.gif" width="60px" />
+            </div>
         </main>
+        <script src="js/Dispatcher.js"></script>
+        <script src="js/ui.js"></script>
         <script src="js/request.js"></script>
         <script src="js/api.js"></script>
         <script src="js/index.js"></script>
         <script src="js/page_navigation.js"></script>
-        <script src="js/App.js"></script>  
+        <script src="js/App.js"></script>
     </body>
 </html>

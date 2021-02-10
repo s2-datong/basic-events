@@ -77,7 +77,7 @@ async function CreateEventType(name, description){
     const url = `${baseURL}/v1/event_type`;
     const data = {name, description};
     const token = localStorage.getItem('token');
-    const result = await _patch(url, data, {
+    const result = await _post(url, data, {
         'Content-type': 'application/json',
         'Authorization': `Bearer ${token}`
     });
