@@ -117,6 +117,28 @@ class Navigation{
         document.body.appendChild(div);
     }
 
+    static SideDrawerLoadingSuccess(callback){
+        if(Navigation.side_drawer_open === false) return;
+        const div = document.querySelector('.side-drawer-loading');
+        if(div){
+            div.innerHTML = '<img src="img/success.png" width="160px" />';
+            if(typeof callback === 'function'){
+                setTimeout(callback, 1000);
+            }
+        }
+    }
+
+    static SideDrawerLoadingError(callback){
+        if(Navigation.side_drawer_open === false) return;
+        const div = document.querySelector('.side-drawer-loading');
+        if(div){
+            div.innerHTML = '<img src="img/error.png" width="160px" />';
+            if(typeof callback === 'function'){
+                setTimeout(callback, 1000);
+            }
+        }
+    }
+
     static SideDrawerDone(){
         const div = document.querySelector('.side-drawer-loading');
         if(div){
@@ -132,5 +154,19 @@ class Navigation{
     static Done(){
         const loader = document.querySelector('.loading');
         loader.classList.add('hide');
+    }
+
+    static showModal(id){
+        const modal = document.querySelector(`#${id}.modal-container`);
+        if(modal){
+            modal.classList.remove('hide');
+        }
+    }
+
+    static closeModal(id){
+        const modal = document.querySelector(`#${id}.modal-container`);
+        if(modal){
+            modal.classList.add('hide');
+        }
     }
 }

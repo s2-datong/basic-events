@@ -8,7 +8,7 @@
         <main>
             <div class="page active transition" id="home-page">
                 <header>
-                    <h1>Event Site</h1>
+                    <img src="img/logo.jpg" width="300px" />
                     <input type="text" placeholder="Search" id="homesearch"/>
                     <button onclick="Navigation.GoToPage('admin-login')" style="font-size: x-large;">Login</button>
                 </header>
@@ -20,9 +20,9 @@
                 <form>
                     <h3>Login</h3>
                     <label>Email</label>
-                    <input type="email" placeholder="email" />
+                    <input type="email" placeholder="email" value="admin@example.com" />
                     <label>Password</label>
-                    <input type="password" placeholder="password" />
+                    <input type="password" placeholder="password" value="admin" />
                     <button onclick="AdminLogin(event)">Login</button>
                     <button onclick="event.preventDefault(); Navigation.GoBackPage('home-page')">Back</button>
                 </form>
@@ -58,6 +58,7 @@
             </div>
             <div class="page right transition" id="admin-home">
                 <header class="main-header">
+                    <img src="img/logo.jpg" width="300px" />
                     <h3>Admin Home</h3>
                     <ul>
                         <li>
@@ -76,7 +77,7 @@
                     <button onclick="Navigation.ShowSideDrawer('new-event-type')">Create Event Type</button>
                 </header>
                 <section>
-                    //
+                    
                 </section>
             </div>
             <div class="side-drawer" id="new-event">
@@ -279,10 +280,92 @@
                 <div id="e-labels"></div>
 
                 <button onclick="Navigation.CloseSideDrawer()">Close</button>
+                <button class="apply-btn">Apply To Event</button>
+                <script>
+                    (function(){
+                        const page = document.querySelector('#event-detail');
+                        const btn = page.querySelector('.apply-btn');
+                        btn.addEventListener('click', () => {
+                            const event_id = event_detail_id;
+                            const event = events.find(e => e.id === event_id);
+                            if(event){
+                                const {event_types} = event;
+                                if(event_types.includes("Premium-only Webinar")){
+                                    Navigation.showModal('premium-only-webinar');
+                                    return;
+                                }
+                                const page = document.querySelector('#event-apply');
+                                page.querySelector('#ename').textContent = event.name;
+                                page.querySelector('input[name=firstname').value = "";
+                                page.querySelector('input[name=lastname').value = "";
+                                page.querySelector('input[name=email').value = "";
+                                Navigation.ShowSideDrawer('event-apply');                                
+                            }
+                        })
+                    })();
+                </script>
+            </div>
+            <div class="side-drawer" id="event-apply">
+                <h4>Event Name</h4>
+                <h6 id="ename"></h6>
+                <h4>First Name</h4>
+                <input type="text" name="firstname" />
+                <h4>Last Name</h4>
+                <input type="text" name="lastname" />
+                <h4>Email</h4>
+                <input type="email" name="email" />
+
+                <button onclick="Navigation.ShowSideDrawer('event-detail')">Go Back</button>
+                <button class="apply-btn">Apply To Event</button>
+                <script>
+                    (function(){
+                        const page = document.querySelector('#event-apply');
+                        const btn = page.querySelector('.apply-btn');
+                        btn.addEventListener('click', () => {
+                            const event_id = event_detail_id;
+                            const event = events.find(e => e.id === event_id);
+                            if(event){
+                                const firstname = page.querySelector('input[name=firstname').value;
+                                const lastname = page.querySelector('input[name=lastname').value;
+                                const email = page.querySelector('input[name=email').value;
+                                Navigation.SideDrawerLoading();
+
+                                ApplyToEvent(event_id, firstname, lastname, email)
+                                .then(result => {
+                                    Navigation.SideDrawerLoadingSuccess(() => {
+                                        Toast.Success("Application Successful");
+                                        Navigation.SideDrawerDone();
+                                        Navigation.ShowSideDrawer('event-detail');
+                                    });
+                                })
+                                .catch(e => {
+                                    Navigation.SideDrawerLoadingError(() => {
+                                        Toast.Error("Looks like you've already applied");
+                                        Navigation.SideDrawerDone();
+                                    });
+                                });
+                                Navigation.ShowSideDrawer('event-apply');                                
+                            }
+                        })
+                    })();
+                </script>
             </div>
             <div class="loading modal-container hide">
                 <img src="img/loader2.gif" width="60px" />
             </div>
+            <div class="modal-container hide" id="premium-only-webinar">
+                <div class="modal">
+                    <a href="javascript:Navigation.closeModal('premium-only-webinar')">Close</a>
+                    <p>
+                        Sorry, you need to apply for a membership before you can buy a Premium only webinar event
+                    </p>
+                    <div>
+                        <a href="#">Read More about Premium</a>
+                        <button>Buy Premium Plan</button>
+                    </div>
+                </div>
+            </div>
+            <div class="toast"></div>
         </main>
         <script src="js/Dispatcher.js"></script>
         <script src="js/ui.js"></script>
@@ -291,5 +374,6 @@
         <script src="js/index.js"></script>
         <script src="js/page_navigation.js"></script>
         <script src="js/App.js"></script>
+        <script src="js/toast.js"></script>
     </body>
 </html>

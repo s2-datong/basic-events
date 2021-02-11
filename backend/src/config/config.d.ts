@@ -10,6 +10,7 @@ interface ICollections {
     EVENT_COLLECTION: string;
     USER_COLLECTION: string;
     EVENT_TYPES_COLLECTION: string;
+    EVENT_APPLICATION_COLLECTION: string;
 }
 
 export interface Iconfig {

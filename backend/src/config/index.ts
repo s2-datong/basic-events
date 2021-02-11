@@ -13,7 +13,8 @@ class Config implements Iconfig{
     collections = {
         EVENT_COLLECTION: "events",
         USER_COLLECTION: "users",
-        EVENT_TYPES_COLLECTION: "event_types"
+        EVENT_TYPES_COLLECTION: "event_types",
+        EVENT_APPLICATION_COLLECTION: "event_applications"
     };
 
     jwt_secret = process.env.JWT_SECRET || 'secret';

@@ -101,3 +101,12 @@ async function DeleteEventType(id){
     const result = await _delete(url, null, {'Authorization': `Bearer ${token}`});
     return result;
 }
+
+async function ApplyToEvent(id, first_name, last_name, email){
+    const url = `${baseURL}/v1/event/apply/${id}`;
+    const data = {event_id: id, first_name, last_name, email};
+    const result = await _post(url, data, {
+        'Content-type': 'application/json'
+    });
+    return result;
+}

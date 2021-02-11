@@ -1,5 +1,5 @@
 import {Router, Request, Response} from "express";
-import {CreateEvent, DeleteEvent, GetSingleEvent, ListEvents, UpdateEvent} from "../controllers/Event";
+import {ApplyToEvent, CreateEvent, DeleteEvent, GetSingleEvent, ListEvents, UpdateEvent} from "../controllers/Event";
 import { AuthAdminMiddleware } from "../middleware";
 const router = Router();
 
@@ -14,6 +14,25 @@ function verifyEventBody(body: any){
     if(_date.toString() === "Invalid Date") throw new Error("invalid date supplied");
     if(!body.venue || body.venue === "") throw new Error("venue parameter is required");
 }
+
+function verifyApplyToEventBody(body: any){
+    if(!body.first_name || body.name === "") throw new Error("first_name parameter is required");
+    if(!body.last_name || body.description === "") throw new Error("last_name parameter is required");
+    if(!body.email) throw new Error("email parameter is required");
+    if(!body.event_id) throw new Error("event_id parameter is required");
+}
+
+router.post('/apply/:id', async (req: Request, res: Response ) => {
+    try{
+        const {body} = req;
+        verifyApplyToEventBody(body);
+        const result = await ApplyToEvent(body.event_id, body.first_name, body.last_name, body.email);
+        res.json(result);
+    }
+    catch(e){
+        res.status(400).json({message: e.message});
+    }
+});
 
 router.post('/', AuthAdminMiddleware, async (req: Request, res: Response) => {
     try{
@@ -83,5 +102,7 @@ router.delete('/:id', AuthAdminMiddleware, async (req: Request, res: Response) =
         res.status(400).json({message: e.message});
     }
 });
+
+
 
 export const EventRouter = router;

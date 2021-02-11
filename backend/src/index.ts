@@ -12,6 +12,8 @@ const app = express();
 app.use(json());
 app.use(cors());
 
+app.use(express.static('../frontend'))
+
 app.use('/v1/event', EventRouter);
 app.use('/v1/event_type', EventTypeRouter);
 app.use('/v1/user', UserRouter);

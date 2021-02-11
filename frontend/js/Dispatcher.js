@@ -11,8 +11,10 @@ document.addEventListener('event-types-changed', (e) => {
     else RenderEventTypes(event_types);
 });
 
+let event_detail_id;
 document.addEventListener('event-detail', (event) => {
     const {id} = event.detail;
+    event_detail_id = id;
     const _event = events.find(e => e.id === id);
     if(_event){
         const _event_types = _event.event_types.map(type => `<span class="pill">${type}</span>`)

@@ -5,8 +5,12 @@ function RenderEvents(_events){
     let collector = "";
     _events.forEach(event => {
         const event_types = event.event_types.map(type => `<span>${type}</span>` );
+        let standout = "";
+        if(event.event_types.includes('Leap') || event.event_types.includes('Mission') || event.event_types.includes('Hackathon')){
+            standout = "hightlight";
+        }
         const template_dom = `
-            <div class="card" data-id="${event.id}">
+            <div class="card ${standout}" data-id="${event.id}">
                     <div class="title">
                         <h1>${event.name}</h1>
                         <p>${event.description}</p>
