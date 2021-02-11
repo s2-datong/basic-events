@@ -9,8 +9,8 @@
             <div class="page active transition" id="home-page">
                 <header>
                     <h1>Event Site</h1>
-                    <input type="text" placeholder="Search" />
-                    <button onclick="Navigation.GoToPage('admin-login')">Login</button>
+                    <input type="text" placeholder="Search" id="homesearch"/>
+                    <button onclick="Navigation.GoToPage('admin-login')" style="font-size: x-large;">Login</button>
                 </header>
                 <div class="container list-events">
 
@@ -24,6 +24,7 @@
                     <label>Password</label>
                     <input type="password" placeholder="password" />
                     <button onclick="AdminLogin(event)">Login</button>
+                    <button onclick="event.preventDefault(); Navigation.GoBackPage('home-page')">Back</button>
                 </form>
                 <style>
                     #admin-login {
@@ -61,7 +62,11 @@
                     <ul>
                         <li>
                             <a href="javascript:void(0)" onclick="GetEvents(true)">Event</a>
+                        </li>
+                        <li>
                             <a href="javascript:void(0)" onclick="GetEventTypes(true)">Event Type</a>
+                        </li>
+                        <li>
                             <a href="javascript:void(0)" onclick="Logout()">Logout</a>
                         </li>
                     </ul>
@@ -260,6 +265,20 @@
                         });
                     })();
                 </script>
+            </div>
+            <div class="side-drawer" id="event-detail">
+                <h4>Event Name</h4>
+                <div id="e-name"></div>
+                <h4>Event Description</h4>
+                <pre id="e-desc"></pre>
+                <h4>Event Venue</h4>
+                <div id="e-venue"></div>
+                <h4>Event Date</h4>
+                <div id="e-date"></div>
+                <h4>Labels</h4>
+                <div id="e-labels"></div>
+
+                <button onclick="Navigation.CloseSideDrawer()">Close</button>
             </div>
             <div class="loading modal-container hide">
                 <img src="img/loader2.gif" width="60px" />

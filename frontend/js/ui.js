@@ -1,11 +1,12 @@
 function RenderEvents(_events){
-    const div = document.querySelector('#list-events');
+    RemoveCardEvents();
+    const div = document.querySelector('.list-events');
     div.innerHTML = "";
     let collector = "";
     _events.forEach(event => {
         const event_types = event.event_types.map(type => `<span>${type}</span>` );
         const template_dom = `
-            <div class="card">
+            <div class="card" data-id="${event.id}">
                     <div class="title">
                         <h1>${event.name}</h1>
                         <p>${event.description}</p>
@@ -16,7 +17,7 @@ function RenderEvents(_events){
                         <label>Venue</label>
                         <div>${event.venue}</div>
                         <label>Event Type</label>
-                        <div>${event_types}</div>
+                        <div>${event_types.join('')}</div>
                     </div>
                 </div>
         `;
@@ -24,6 +25,7 @@ function RenderEvents(_events){
     });
 
     div.innerHTML = collector;
+    AddCardEvents();
 }
 
 function AdminRenderEvents(events){
@@ -35,7 +37,7 @@ function AdminRenderEvents(events){
                 <td> <pre> ${event.description} </pre> </td>
                 <td> ${event.venue} </td>
                 <td> ${new Date(event.date).toDateString()} </td>
-                <td> ${event_types} </td>
+                <td> ${event_types.join('')} </td>
                 <td> 
                     <div> <a href="#" onclick="ShowUpdateEvent('${event.id}')"> Update </a> </div>
                     <div> <a href="#" onclick="ShowDeleteEvent('${event.id}')"> Delete </a> </div>

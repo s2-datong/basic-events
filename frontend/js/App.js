@@ -50,3 +50,28 @@ function InitAdminHome(){
     GetEvents(true);
     GetEventTypes(false);
 }
+
+const homesearch = document.querySelector('#homesearch');
+homesearch.addEventListener('input', HandleSearch);
+
+let page = 1;
+let limit = 20;
+let search = '';
+let t = null;
+
+function HandleSearch(event){
+    search = homesearch.value;
+    if(t) clearTimeout(t);
+    t = setTimeout(DoSearch, 200);
+}
+
+async function DoSearch(){
+    clearTimeout(t);
+    t = null;
+
+    events = await ListEvents(page, limit, search);
+    const eventsChanged = new CustomEvent('events-change', {
+        detail: { events, admin: false }
+    });
+    document.dispatchEvent(eventsChanged);
+}

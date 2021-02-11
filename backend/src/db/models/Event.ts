@@ -57,8 +57,8 @@ export class Event{
         const skip = (page - 1) * limit;
         let where = {};
         if(search !== null) where = {$or: [
-            {name: {$regex: search, $otions: 'i'}},
-            {description: {$regex: search, $otions: 'i'}}
+            {name: {$regex: search, $options: 'i'}},
+            {description: {$regex: search, $options: 'i'}}
         ]};
         const result = await collection.find(where).sort({_id: -1}).skip(skip).limit(limit).toArray();
         const events = result.map((event) => ({
