@@ -1,5 +1,5 @@
 // make api calls to backend
-const baseURL = "http://localhost:3000";
+const baseURL = `${location.protocol}//${location.host}`;
 
 // EVENTS
 async function ListEvents(page, limit, search){
