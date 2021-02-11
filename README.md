@@ -1,5 +1,5 @@
 # Test
-Please visit https://aaa.herokuapp.com to test the deployed solution
+Please visit https://calm-mesa-23204.herokuapp.com/ to test the deployed solution
 
 For the admin login
 

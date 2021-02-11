@@ -15,14 +15,16 @@ FROM node:12
 
 WORKDIR /app
 
-COPY --from=builder /app/backend/package*.json ./backend
+COPY --from=builder /app/backend/package*.json ./backend/
 
-RUN npm install --only=prod
+COPY --from=builder /app/backend/dist ./backend/
 
-COPY --from=builder /app/backend/dist ./backend
+COPY --from=builder /app/frontend ./frontend/
 
-COPY --from=builder /app/frontend ./frontend
+COPY ./backend/.env /app/backend/.env
 
 WORKDIR /app/backend
+
+RUN npm install --only=prod
 
 CMD ["npm", "run", "start"]
